@@ -1,0 +1,29 @@
+version: "3"
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: always
+    ports:
+      - "3000:3000"
+    depends_on:
+      - db
+    environment:
+      - DATABASE_URL=postgres://postgres:password@localhost:5432/formulas-calculation
+    # volumes:
+    # - ./:/app
+    # - /app/node_modules
+    # - /app/.next
+    # command: >
+    #   sh -c "npm install wait-on && npx wait-on tcp:db:5432 && npm run migrate up && npm run build && npm start"
+  db:
+    image: postgres
+    environment:
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=formulas-calculation
+      - POSTGRES_HOST_AUTH_METHOD=md5
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./psql_data:/var/lib/postgresql/data
